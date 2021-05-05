@@ -57,7 +57,9 @@ def levenshtein_ratio_and_distance(s, t, ratio_calc=False):
         # This is the minimum number of edits needed to convert string a to string b
         return distance[row][col]
 
-def test(species, i, oldts):
+def test(species, i, return_dict):
+    return_dict[i]= i+1
+    return return_dict
     for j in range(i, len(species)):
         if species[i][0] == species[j][0]:
             if species[i][0] in answerdict:
@@ -72,11 +74,9 @@ def test(species, i, oldts):
                 answerdict[species[i][0]] = [answer]
 
         newts = datetime.datetime.now()
-        compts = newts - oldts
 
-        print(i + 1, " from ", len(species), " and done with comparing ", j + 1, " from ", len(species) - i, " in ",
-              compts.seconds, " seconds,  the time is", newts.time())
-        oldts = datetime.datetime.now()
+        print(i + 1, " from ", len(species), " and done with comparing ", j + 1, " from ", len(species) - i, " seconds, the time is", newts.time())
+    return answerdict
 
 
 def genomedif(x, y):
@@ -116,10 +116,39 @@ answerdict = {}
 oldts = datetime.datetime.now()
 threadcount = 0
 # for i in range(1, len(species)):
-t1 = multiprocessing.Process(target=test, args=(species, 1, oldts))
-t2 = multiprocessing.Process(target=test, args=(species, 2, oldts))
-t1.start()
-t2.start()
+processes = []
+return_dict = multiprocessing.Manager().dict()
+for i in range(12, 21):
+    print(i)
+    p = multiprocessing.Process(target=test, args=(species, i, return_dict))
+    processes.append(p)
+    p.start()
+
+for process in processes:
+    process.join()
+
+
+print(return_dict[14])
+
+
+# t12 = multiprocessing.Process(target=test, args=(species, 12))
+# t13 = multiprocessing.Process(target=test, args=(species, 13))
+# t14 = multiprocessing.Process(target=test, args=(species, 14))
+# t15 = multiprocessing.Process(target=test, args=(species, 15))
+# t16 = multiprocessing.Process(target=test, args=(species, 16))
+# t17 = multiprocessing.Process(target=test, args=(species, 17))
+# t18 = multiprocessing.Process(target=test, args=(species, 18))
+# t19 = multiprocessing.Process(target=test, args=(species, 19))
+# t20 = multiprocessing.Process(target=test, args=(species, 20))
+# t12.start()
+# t13.start()
+# t14.start()
+# t15.start()
+# t16.start()
+# t17.start()
+# t18.start()
+# t19.start()
+# t20.start()
 
 
 #     for j in range(i, len(species)):

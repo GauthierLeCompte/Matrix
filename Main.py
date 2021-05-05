@@ -87,17 +87,11 @@ oldts = datetime.datetime.now()
 
 for i in range(1,len(species)):
     for j in range(i, len(species)):
-        if species[i][0] == species[j][0]:
-            if species[i][0] in answerdict:
-                answerdict[species[i][0]].append("-")
-            else:
-                answerdict[species[i][0]] = ["-"]
+        answer = genomedif(species[i][1], species[j][1])
+        if species[i][0] in answerdict:
+            answerdict[species[i][0]].append(answer)
         else:
-            answer = genomedif(species[i][1], species[j][1])
-            if species[i][0] in answerdict:
-                answerdict[species[i][0]].append(answer)
-            else:
-                answerdict[species[i][0]] = [answer]
+            answerdict[species[i][0]] = [answer]
 
         newts = datetime.datetime.now()
         compts = newts-oldts
