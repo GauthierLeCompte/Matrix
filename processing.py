@@ -62,16 +62,16 @@ def test(species, i, return_dict):
     return return_dict
     for j in range(i, len(species)):
         if species[i][0] == species[j][0]:
-            if species[i][0] in answerdict:
-                answerdict[species[i][0]].append("-")
+            if species[i][0] in return_dict:
+                return_dict[species[i][0]].append(100.0)
             else:
-                answerdict[species[i][0]] = ["-"]
+                return_dict[species[i][0]] = [100.0]
         else:
             answer = genomedif(species[i][1], species[j][1])
             if species[i][0] in answerdict:
-                answerdict[species[i][0]].append(answer)
+                return_dict[species[i][0]].append(answer)
             else:
-                answerdict[species[i][0]] = [answer]
+                return_dict[species[i][0]] = [answer]
 
         newts = datetime.datetime.now()
 
@@ -129,7 +129,9 @@ for process in processes:
 
 
 print(return_dict[14])
-
+with open('result.json', 'w') as fp:
+    json.dump(return_dict, fp)
+jsonStr = json.dumps(return_dict)
 
 # t12 = multiprocessing.Process(target=test, args=(species, 12))
 # t13 = multiprocessing.Process(target=test, args=(species, 13))
