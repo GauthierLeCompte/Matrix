@@ -79,11 +79,13 @@ for i in data['species']:
     specie = [i["name"], i["genome"]]
     species.append(specie)
 f.close()
+
+
 x=1
 answerdict = {}
 oldts = datetime.datetime.now()
 
-for i in range(len(species)):
+for i in range(1,len(species)):
     for j in range(i, len(species)):
         if species[i][0] == species[j][0]:
             if species[i][0] in answerdict:
