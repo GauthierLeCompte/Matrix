@@ -58,25 +58,28 @@ def levenshtein_ratio_and_distance(s, t, ratio_calc=False):
         return distance[row][col]
 
 def test(species, i, return_dict):
-    return_dict[i]= i+1
-    return return_dict
     for j in range(i, len(species)):
-        if species[i][0] == species[j][0]:
-            if species[i][0] in return_dict:
-                return_dict[species[i][0]].append(100.0)
-            else:
-                return_dict[species[i][0]] = [100.0]
+        if species[i][0] in answerdict:
+            return_dict[species[i][0]].append(j)
         else:
-            answer = genomedif(species[i][1], species[j][1])
-            if species[i][0] in answerdict:
-                return_dict[species[i][0]].append(answer)
-            else:
-                return_dict[species[i][0]] = [answer]
-
-        newts = datetime.datetime.now()
-
-        print(i + 1, " from ", len(species), " and done with comparing ", j + 1, " from ", len(species) - i, " seconds, the time is", newts.time())
-    return answerdict
+            return_dict[species[i][0]]= [j]
+    return return_dict
+    #     if species[i][0] == species[j][0]:
+    #         if species[i][0] in return_dict:
+    #             return_dict[species[i][0]].append(100.0)
+    #         else:
+    #             return_dict[species[i][0]] = [100.0]
+    #     else:
+    #         answer = genomedif(species[i][1], species[j][1])
+    #         if species[i][0] in answerdict:
+    #             return_dict[species[i][0]].append(answer)
+    #         else:
+    #             return_dict[species[i][0]] = [answer]
+    #
+    #     newts = datetime.datetime.now()
+    #
+    #     print(i + 1, " from ", len(species), " and done with comparing ", j + 1, " from ", len(species) - i, " seconds, the time is", newts.time())
+    # return answerdict
 
 
 def genomedif(x, y):
@@ -128,10 +131,10 @@ for process in processes:
     process.join()
 
 
-print(return_dict[14])
+# print(return_dict[14])
 with open('result.json', 'w') as fp:
-    json.dump(return_dict, fp)
-jsonStr = json.dumps(return_dict)
+    json.dump(return_dict.copy(), fp)
+# jsonStr = json.dumps(return_dict)
 
 # t12 = multiprocessing.Process(target=test, args=(species, 12))
 # t13 = multiprocessing.Process(target=test, args=(species, 13))
