@@ -60,28 +60,16 @@ def levenshtein_ratio_and_distance(s, t, ratio_calc=False):
 def test(species, i, return_dict):
     toapend = []
     for j in range(i, len(species)):
-        toapend.append(j)
-        # if species[i][0] in return_dict:
-        #     return_dict[species[i][0]].append(j)
-        # else:
-    return_dict[species[i][0]] = toapend
+        if species[i][0] == species[j][0]:
+            toapend.append(100.0)
+        else:
+            answer = genomedif(species[i][1], species[j][1])
+            toapend.append(answer)
+
+        newts = datetime.datetime.now()
+
+        print(i + 1, " from ", len(species), " and done with comparing ", j + 1, " from ", len(species) - i, " seconds, the time is", newts.time())
     return return_dict
-    #     if species[i][0] == species[j][0]:
-    #         if species[i][0] in return_dict:
-    #             return_dict[species[i][0]].append(100.0)
-    #         else:
-    #             return_dict[species[i][0]] = [100.0]
-    #     else:
-    #         answer = genomedif(species[i][1], species[j][1])
-    #         if species[i][0] in return_dict:
-    #             return_dict[species[i][0]].append(answer)
-    #         else:
-    #             return_dict[species[i][0]] = [answer]
-    #
-    #     newts = datetime.datetime.now()
-    #
-    #     print(i + 1, " from ", len(species), " and done with comparing ", j + 1, " from ", len(species) - i, " seconds, the time is", newts.time())
-    # return return_dict
 
 
 def genomedif(x, y):
@@ -134,7 +122,7 @@ for process in processes:
 
 
 # print(return_dict[14])
-with open('result.json', 'w') as fp:
+with open('result_gauthier.json', 'w') as fp:
     json.dump(return_dict.copy(), fp)
 
 # jsonStr = json.dumps(return_dict)
