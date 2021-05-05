@@ -116,7 +116,6 @@ for i in data['species']:
     species.append(specie)
 f.close()
 
-x = 1
 answerdict = {}
 oldts = datetime.datetime.now()
 threadcount = 0

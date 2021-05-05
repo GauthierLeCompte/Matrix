@@ -68,7 +68,9 @@ def test(species, i, return_dict):
 
         newts = datetime.datetime.now()
 
-        print(i + 1, " from ", len(species), " and done with comparing ", j + 1, " from ", len(species) - i, " seconds, the time is", newts.time())
+        print(i + 1, " said ", " i'm done with comparing ", j +1+ -i, " from ", len(species) - i, " seconds, the time is", newts.time())
+    return_dict[species[i][0]] = toapend
+    print(species[i][0], " ", toapend)
     return return_dict
 
 
