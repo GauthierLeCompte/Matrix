@@ -8,8 +8,9 @@ import json
 import datetime
 import multiprocessing
 import functools
+import ClientCodeclass
 
-exitFlag = 0
+
 
 def makeMatrix(s):
     rows = s+1
@@ -55,7 +56,7 @@ def levenshtein_ratio_and_distance(s, t, distance):
     Ratio = ((len(s) + len(t)) - distance[row][col]) / (len(s) + len(t))
     return Ratio
 
-def genomediff(x, y):
+def genomediff(x, y, client1):
     """
     calculate the diffrent combinations of the 2 genomes
     :param x: genome 1
@@ -75,16 +76,24 @@ def genomediff(x, y):
     distance = makeMatrix(smallest)
 
     final = 0
+    step = 100
+    steptotal = 0
     for i in range(count + 1):
+        step += 1
+        steptotal +=1
         usedx = x[i:leny + i]
         usedy = y
         if swapped:
             usedx = x
             usedy = y[i:leny + i]
+        result2 = levenshtein_ratio_and_distance(usedx, usedy, distance.copy())
+        if step>=100:
+            client1.update(result2)
+            step = 0
 
-        result2 = levenshtein_ratio_and_distance(usedx, usedy, distance)
         if result2 > final:
             final = result2
+    print(f"this were the steps {steptotal}")
     return final
 
 
@@ -98,12 +107,14 @@ def algorithm(species, i, return_dict):
     """
     toapend = []
     for j in range(i, len(species)):
+        client1 = ClientCodeclass.clientclass(species[i][0], species[j][0])
+        client1.send(f"lol{j}")
         if species[i][0] == species[j][0]:
             toapend.append(1.0)
         else:
-            answer = genomediff(species[i][1], species[j][1])
+            answer = genomediff(species[i][1], species[j][1], client1)
             toapend.append(answer)
-
+        client1.closee()
         newts = datetime.datetime.now()
 
         print(i + 1, " said ", " i'm done with comparing ", j + 1 + -i, " from ", len(species) - i, " , the time is",
@@ -125,7 +136,7 @@ if __name__ == "__main__":
     oldts = datetime.datetime.now()
     processes = []
     return_dict = multiprocessing.Manager().dict()
-    test = [27,28]
+    test = [26, 27, 28]
     for i in test:
         print("start procces %i" % (i+1))
         p = multiprocessing.Process(target=algorithm, args=(species, i, return_dict))
