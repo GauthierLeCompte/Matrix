@@ -18,10 +18,11 @@ def levenshtein_ratio_and_distance(s, t, ratio_calc = False):
     distance = np.zeros((rows,cols),dtype = int)
 
     # Populate matrix of zeros with the indeces of each character of both strings
-    for i in range(1, rows):
-        for k in range(1,cols):
-            distance[i][0] = i
-            distance[0][k] = k
+    for i in np.arange(1, rows):
+        distance[i][0] = i
+
+    for k in np.arange(1,cols):
+        distance[0][k] = k
 
     # Iterate over the matrix to compute the cost of deletions,insertions and/or substitutions
     for col in range(1, cols):
