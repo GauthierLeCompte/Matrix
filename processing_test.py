@@ -122,7 +122,7 @@ def algorithm(species, i, return_dict):
     toapend = []
     for j in range(i, len(species)):
         client1 = ClientCodeclass.clientclass(species[i][0], species[j][0])
-        client1.send(f"lol{j}")
+        feedback = client1.ask(species[i][0], species[j][0])
         if species[i][0] == species[j][0]:
             toapend.append(1.0)
         else:

@@ -31,11 +31,26 @@ def handle_client(conn, addr):
                 with open(f'{z["row"]}{z["col"]}.json', 'w') as fp:
                     json.dump(z, fp)
                 fp.close()
+                conn.send("Msg received".encode(FORMAT))
+
 
             except ValueError:
+                if msg[1] == "1":
+                    try:
+                        fi = open(f"{msg[1:]}.json")
+                        dataname = json.load(fi)
+                        fi.close()
+                        tosend = json.dumps(dataname)
+                        conn.send(f"{tosend}".encode(FORMAT))
+
+                    except:
+                        conn.send("no".encode(FORMAT))
+
+
+                else:
+                    conn.send("Msg received".encode(FORMAT))
+
                 print(msg)
-            print(msg[1])
-            conn.send("Msg received".encode(FORMAT))
 
     conn.close()
 

@@ -19,6 +19,13 @@ class clientclass:
         self.col_name = col_name
         self.r = 0
 
+    def ask(self, x, y):
+        msg = f"1{x}{y}"
+        answer = self.send(msg)
+        z = json.loads(answer)
+        with open(f'{z["row"]}{z["col"]}.json', 'w') as fp:
+            json.dump(z, fp)
+        fp.close()
 
     def update(self, result, i, final):
         if result > self.r:
@@ -36,6 +43,7 @@ class clientclass:
         self.client.send(send_length)
         self.client.send(message)
         print(self.client.recv(2048).decode(self.FORMAT))
+        return self.client.recv(2048).decode(self.FORMAT)
 
     def closee(self):
         self.send(self.DISCONNECT_MESSAGE)
