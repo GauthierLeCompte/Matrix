@@ -56,13 +56,23 @@ def levenshtein_ratio_and_distance(s, t, distance):
     Ratio = ((len(s) + len(t)) - distance[row][col]) / (len(s) + len(t))
     return Ratio
 
-def genomediff(x, y, client1):
+def genomediff(x, y, client1, name):
     """
     calculate the diffrent combinations of the 2 genomes
     :param x: genome 1
     :param y: genome 2
     :return: best combination
     """
+    try:
+        fi = open(f"{name}.json")
+        dataname = json.load(fi)
+        fi.close()
+        if dataname["final"] == True:
+            return dataname["result"]
+        start = dataname["i"]
+
+    except (FileNotFoundError, IOError):
+        start = 0
     lenx = len(x)
     leny = len(y)
     swapped = False
@@ -78,7 +88,7 @@ def genomediff(x, y, client1):
     final = 0
     step = 100
     steptotal = 0
-    for i in range(count + 1):
+    for i in range(start, count + 1):
         step += 1
         steptotal +=1
         usedx = x[i:leny + i]
@@ -87,12 +97,16 @@ def genomediff(x, y, client1):
             usedx = x
             usedy = y[i:leny + i]
         result2 = levenshtein_ratio_and_distance(usedx, usedy, distance.copy())
-        if step>=100:
-            client1.update(result2)
-            step = 0
+
 
         if result2 > final:
             final = result2
+            client1.update(result2, i, False)
+            step = 0
+        if step>=100:
+            client1.update(result2, i, False)
+            step = 0
+    client1.update(final, count, True)
     print(f"this were the steps {steptotal}")
     return final
 
@@ -108,11 +122,11 @@ def algorithm(species, i, return_dict):
     toapend = []
     for j in range(i, len(species)):
         client1 = ClientCodeclass.clientclass(species[i][0], species[j][0])
-        client1.send(f"lol{j}")
+        client1.ask(species[i][0], species[j][0])
         if species[i][0] == species[j][0]:
             toapend.append(1.0)
         else:
-            answer = genomediff(species[i][1], species[j][1], client1)
+            answer = genomediff(species[i][1], species[j][1], client1, f"{species[i][0]}{species[j][0]}")
             toapend.append(answer)
         client1.closee()
         newts = datetime.datetime.now()
@@ -125,7 +139,7 @@ def algorithm(species, i, return_dict):
 
 
 if __name__ == "__main__":
-    f = open('sequenties.json', )
+    f = open('sequenties.json')
     data = json.load(f)
     species = []
     for i in data['species']:
