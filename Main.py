@@ -59,6 +59,7 @@ def genomedif(x, y):
         swapped = True
         count = leny-lenx
 
+    besti = 0
     final = 0
     for i in range(count+1):
         usedx = x[i:leny+i]
@@ -69,8 +70,16 @@ def genomedif(x, y):
 
         result2 = levenshtein_ratio_and_distance(usedx, usedy, True)
         if result2 > final:
+            besti = i
             final = result2
+    print("BESTE I: ", besti)
     return final
+
+def getGenome(name):
+    for i in range(len(species)):
+        if species[i][0] == name:
+            return species[i][1]
+    return None
 
 f = open('sequenties.json', )
 
@@ -86,7 +95,29 @@ x=1
 answerdict = {}
 oldts = datetime.datetime.now()
 
-for i in range(1,len(species)):
+comparison_dict = {"Ailurus_fulgens": "Canis_rufus",
+                   "Vulpes_vulpes": "Canis_lupus_pallipes",
+                   "Canis_latrans": "Canis_simensis",
+                   "Canis_lupus_chanco": "Lycalopex_culpaeus",
+                   "Canis_lupus_familiaris": "Lycalopex_vetulus",
+                   "Canis_lupus_lupus": "Lycalopex_griseus"}
+
+for key, value in comparison_dict.items():
+    print ("Comparing ", key, " with ", value)
+    answer = genomedif(getGenome(key), getGenome(value))
+    if key in answerdict:
+        answerdict[key].append(answer)
+    else:
+        answerdict[key] = [answer]
+
+    newts = datetime.datetime.now()
+    compts = newts - oldts
+
+    #print(i + 1, " from ", len(species), " and done with comparing ", j + 1, " from ", len(species) - i, " in ",
+          #compts.seconds, " seconds,  the time is", newts.time())
+    oldts = datetime.datetime.now()
+
+'''for i in range(1,len(species)):
     for j in range(i, len(species)):
         answer = genomedif(species[i][1], species[j][1])
         if species[i][0] in answerdict:
@@ -97,8 +128,9 @@ for i in range(1,len(species)):
         newts = datetime.datetime.now()
         compts = newts-oldts
 
+        print(species[i][0])
         print(i+1, " from ", len(species), " and done with comparing ", j+1, " from ", len(species)-i, " in ", compts.seconds, " seconds,  the time is", newts.time())
-        oldts = datetime.datetime.now()
+        oldts = datetime.datetime.now()'''
 
 
 
