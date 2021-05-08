@@ -60,6 +60,7 @@ def genomedif(x, y):
         count = leny-lenx
 
     final = 0
+    besti = 0
     for i in range(count+1):
         usedx = x[i:leny+i]
         usedy = y
@@ -70,7 +71,8 @@ def genomedif(x, y):
         result2 = levenshtein_ratio_and_distance(usedx, usedy, True)
         if result2 > final:
             final = result2
-    return final
+            besti = i
+    return final, besti
 
 f = open('sequenties.json', )
 

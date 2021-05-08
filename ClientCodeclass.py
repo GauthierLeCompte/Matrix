@@ -1,5 +1,5 @@
 import socket
-
+import json
 
 
 
@@ -9,7 +9,7 @@ class clientclass:
         PORT = 5050
         self.FORMAT = 'utf-8'
         self.DISCONNECT_MESSAGE = "!DISCONNECT"
-        SERVER = "127.0.1.1"
+        SERVER = "192.168.0.240"
         ADDR = (SERVER, PORT)
 
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -20,10 +20,12 @@ class clientclass:
         self.r = 0
 
 
-    def update(self, result):
+    def update(self, result, i, final):
         if result > self.r:
             self.r = result
-        msg = f"row {self.row_name} is evaluating {self.col_name} as result {result}"
+        progress = {"row": self.row_name, "col":self.col_name, "result":result, "i":i, "final": final}
+        msg = json.dumps(progress)
+        # msg = f"row {self.row_name} is evaluating {self.col_name} as result {result}"
         self.send(msg)
 
     def send(self, msg):
