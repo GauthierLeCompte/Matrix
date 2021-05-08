@@ -22,10 +22,11 @@ class clientclass:
     def ask(self, x, y):
         msg = f"1{x}{y}"
         answer = self.send(msg)
-        z = json.loads(answer)
-        with open(f'{z["row"]}{z["col"]}.json', 'w') as fp:
-            json.dump(z, fp)
-        fp.close()
+        if answer != "no":
+            z = json.loads(answer)
+            with open(f'{z["row"]}{z["col"]}.json', 'w') as fp:
+                json.dump(z, fp)
+            fp.close()
 
     def update(self, result, i, final):
         if result > self.r:
@@ -42,8 +43,9 @@ class clientclass:
         send_length += b' ' * (self.HEADER - len(send_length))
         self.client.send(send_length)
         self.client.send(message)
-        print(self.client.recv(2048).decode(self.FORMAT))
-        return self.client.recv(2048).decode(self.FORMAT)
+        x = self.client.recv(2048).decode(self.FORMAT)
+        print(x)
+        return x
 
     def closee(self):
         self.send(self.DISCONNECT_MESSAGE)

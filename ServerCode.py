@@ -35,7 +35,7 @@ def handle_client(conn, addr):
 
 
             except ValueError:
-                if msg[1] == "1":
+                if msg[0] == "1":
                     try:
                         fi = open(f"{msg[1:]}.json")
                         dataname = json.load(fi)
@@ -48,7 +48,7 @@ def handle_client(conn, addr):
 
 
                 else:
-                    conn.send("Msg received".encode(FORMAT))
+                    conn.send("Msg1 received".encode(FORMAT))
 
                 print(msg)
 
