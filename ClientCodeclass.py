@@ -9,7 +9,7 @@ class clientclass:
         PORT = 5050
         self.FORMAT = 'utf-8'
         self.DISCONNECT_MESSAGE = "!DISCONNECT"
-        SERVER = "192.168.0.240"
+        SERVER = "192.168.0.241"
         ADDR = (SERVER, PORT)
 
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
