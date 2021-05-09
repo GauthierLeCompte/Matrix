@@ -16,8 +16,6 @@ def makeMatrix(s):
     rows = s+1
     cols = s+1
     distance = np.zeros((rows, cols), dtype=int)
-    print(f"rows {rows} col {cols} ")
-
     # Populate matrix of zeros with the indeces of each character of both strings
     # for i in range(1, rows):
     #     for k in range(1, cols):
