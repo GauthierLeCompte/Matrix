@@ -17,10 +17,10 @@ class clientclass:
 
         self.row_name = row_name
         self.col_name = col_name
-        self.r = 0
+        self.best_result = 0
 
-    def ask(self, x, y):
-        msg = f"1{x}{y}"
+    def ask(self):
+        msg = f"1{self.row_name}{self.col_name}"
         answer = self.send(msg)
         if answer != "no":
             z = json.loads(answer)
@@ -29,8 +29,8 @@ class clientclass:
             fp.close()
 
     def update(self, result, i, final):
-        if result > self.r:
-            self.r = result
+        if result > self.best_result:
+            self.best_result = result
         progress = {"row": self.row_name, "col":self.col_name, "result":result, "i":i, "final": final}
         msg = json.dumps(progress)
         # msg = f"row {self.row_name} is evaluating {self.col_name} as result {result}"

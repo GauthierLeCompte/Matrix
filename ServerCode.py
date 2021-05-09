@@ -27,9 +27,9 @@ def handle_client(conn, addr):
 
             print(f"[{addr}] {msg}")
             try:
-                z = json.loads(msg)
-                with open(f'{z["row"]}{z["col"]}.json', 'w') as fp:
-                    json.dump(z, fp)
+                resultdict = json.loads(msg)
+                with open(f'{resultdict["row"]}{resultdict["col"]}.json', 'w') as fp:
+                    json.dump(resultdict, fp)
                 fp.close()
                 conn.send("Msg received".encode(FORMAT))
 

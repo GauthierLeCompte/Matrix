@@ -63,6 +63,22 @@ def genomediff(x, y, client1, name):
     :param y: genome 2
     :return: best combination
     """
+    lenx = len(x)
+    leny = len(y)
+    swapped = False
+
+    count = lenx - leny
+    smallest = leny
+    longest = lenx
+    start = 0
+    final = 0
+
+    if lenx < leny:
+        longest = leny
+        swapped = True
+        count = leny - lenx
+        smallest = lenx
+
     try:
         fi = open(f"{name}.json")
         dataname = json.load(fi)
@@ -70,22 +86,14 @@ def genomediff(x, y, client1, name):
         if dataname["final"] == True:
             return dataname["result"]
         start = dataname["i"]
+        final = dataname["result"]
 
     except (FileNotFoundError, IOError):
-        start = 0
-    lenx = len(x)
-    leny = len(y)
-    swapped = False
-
-    count = lenx - leny
-    smallest = leny
-    if lenx < leny:
-        swapped = True
-        count = leny - lenx
-        smallest = lenx
+        if longest > 14000 and smallest <10000:
+            start = 14100 - (smallest*2)
+            count = min(count, 14200+smallest*2)
     distance = makeMatrix(smallest)
 
-    final = 0
     step = 100
     steptotal = 0
     for i in range(start, count + 1):
