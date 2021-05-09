@@ -22,6 +22,7 @@ class clientclass:
     def ask(self):
         msg = f"1{self.row_name}{self.col_name}"
         answer = self.send(msg)
+        print(answer)
         if answer != "no":
             z = json.loads(answer)
             with open(f'{z["row"]}{z["col"]}.json', 'w') as fp:
@@ -44,7 +45,7 @@ class clientclass:
         self.client.send(send_length)
         self.client.send(message)
         x = self.client.recv(2048).decode(self.FORMAT)
-        print(x)
+        # print(x)
         return x
 
     def closee(self):

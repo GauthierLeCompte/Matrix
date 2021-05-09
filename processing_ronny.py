@@ -101,7 +101,7 @@ def genomediff(x, y, client1, name):
         usedy = y
         if swapped:
             usedx = x
-            usedy = y[i:leny + i]
+            usedy = y[i:lenx + i]
         result2 = levenshtein_ratio_and_distance(usedx, usedy, distance.copy())
 
 
