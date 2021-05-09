@@ -125,10 +125,10 @@ def algorithm(species, i, return_dict):
     :param return_dict: dictionory
     :return: return_dict
     """
-    toapend = []
-    for j in range(i, len(species)):
-        client1 = ClientCodeclass.clientclass(species[i][0], species[j][0])
-        client1.ask(species[i][0], species[j][0])
+    toapend = [] # Lijst van resultaten van alle kolommen in volgorde
+    for j in range(i, len(species)): # Loop over alle kolommen
+        client1 = ClientCodeclass.clientclass(species[i][0], species[j][0]) # Client initializeren
+        client1.ask() #
         if species[i][0] == species[j][0]:
             toapend.append(1.0)
         else:
