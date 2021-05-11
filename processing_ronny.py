@@ -157,7 +157,8 @@ if __name__ == "__main__":
     processes = []
     return_dict = multiprocessing.Manager().dict()
     ronny = [0, 2, 4, 6, 8, 10, 12, 14, 16, 17, 18, 19, 23, 24, 25, 26, 27, 28]
-    for i in ronny:
+    donski = [24, 25]
+    for i in donski:
         print("start procces %i" % (i+1))
         p = multiprocessing.Process(target=algorithm, args=(species, i, return_dict))
         processes.append(p)
