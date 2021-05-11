@@ -107,10 +107,10 @@ def genomediff(x, y, client1, name):
 
         if result2 > final:
             final = result2
-            client1.update(result2, i, False)
+            client1.update(final, i, False)
             step = 0
         if step>=100:
-            client1.update(result2, i, False)
+            client1.update(final, i, False)
             step = 0
     client1.update(final, count, True)
     print(f"this were the steps {steptotal}")
