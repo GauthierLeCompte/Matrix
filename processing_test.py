@@ -9,26 +9,10 @@ import datetime
 import multiprocessing
 import functools
 import ClientCodeclass
-
-
-
-def makeMatrix(s):
-    rows = s+1
-    cols = s+1
-    distance = np.zeros((rows, cols), dtype=int)
-    # Populate matrix of zeros with the indeces of each character of both strings
-    # for i in range(1, rows):
-    #     for k in range(1, cols):
-    #         distance[i][0] = i
-    #         distance[0][k] = k
-    for i in range(1, rows):
-        distance[i][0] = i
-    for k in range(1, cols):
-        distance[0][k] = k
-    return distance
+import Levenshtein
 
 # @functools.lru_cache(maxsize=None)
-def levenshtein_ratio_and_distance(s, t, distance):
+def levenshtein_ratio_and_distance(s, t):
     """ levenshtein_ratio_and_distance:
         Calculates levenshtein distance between two strings.
         If ratio_calc = True, the function computes the
@@ -37,22 +21,15 @@ def levenshtein_ratio_and_distance(s, t, distance):
         distance between the first i characters of s and the
         first j characters of t
     """
-    # Initialize matrix of zeros
+    # print(f"number1 start{datetime.datetime.now().time()}")
+    x = Levenshtein.ratio(s, t)
+    # print(x)
 
-    rows = len(s) + 1
-    cols = len(t) + 1
-    # Iterate over the matrix to compute the cost of deletions,insertions and/or substitutions
-    for col in range(1, cols):
-        for row in range(1, rows):
-            cost = 2
-            if s[row - 1] == t[col - 1]:
-                cost = 0  # If the characters are the same in the two strings in a given position [i,j] then the cost is 0
-            distance[row][col] = min(distance[row - 1][col] + 1,  # Cost of deletions
-                                     distance[row][col - 1] + 1,  # Cost of insertions
-                                     distance[row - 1][col - 1] + cost)  # Cost of substitutions
-        # Computation of the Levenshtein Distance Ratio
-    Ratio = ((len(s) + len(t)) - distance[row][col]) / (len(s) + len(t))
-    return Ratio
+    # print(f"number1 stop {datetime.datetime.now().time()}")
+    return x
+
+
+
 
 def genomediff(x, y, client1, name):
     """
@@ -90,7 +67,6 @@ def genomediff(x, y, client1, name):
         if longest > 14000 and smallest <10000:
             start = 14100 - (smallest*2)
             count = min(count, 14200+smallest*2)
-    distance = makeMatrix(smallest)
 
     step = 100
     steptotal = 0
@@ -101,16 +77,17 @@ def genomediff(x, y, client1, name):
         usedy = y
         if swapped:
             usedx = x
-            usedy = y[i:leny + i]
+            usedy = y[i:lenx + i]
         result2 = levenshtein_ratio_and_distance(usedx, usedy, distance.copy())
-
+        # result3 = levenshtein_ratio_and_distance2(usedx, usedy, distance.copy())
+        # print(f"{result2} vs {result3} = {result2-result3}")
 
         if result2 > final:
             final = result2
-            client1.update(result2, i, False)
+            client1.update(final, i, False)
             step = 0
         if step>=100:
-            client1.update(result2, i, False)
+            client1.update(final, i, False)
             step = 0
     client1.update(final, count, True)
     print(f"this were the steps {steptotal}")
@@ -156,8 +133,8 @@ if __name__ == "__main__":
     oldts = datetime.datetime.now()
     processes = []
     return_dict = multiprocessing.Manager().dict()
-    test = [26, 27, 28]
-    for i in test:
+    ronny = [0, 2, 4, 6, 8, 10, 12, 14, 16, 17, 18, 19, 23, 24, 25, 26, 27, 28]
+    for i in ronny:
         print("start procces %i" % (i+1))
         p = multiprocessing.Process(target=algorithm, args=(species, i, return_dict))
         processes.append(p)
@@ -169,3 +146,4 @@ if __name__ == "__main__":
     with open('result_test.json', 'w') as fp:
         json.dump(return_dict.copy(), fp)
     fp.close()
+

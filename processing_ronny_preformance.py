@@ -9,6 +9,7 @@ import datetime
 import multiprocessing
 import functools
 import ClientCodeclass
+from Levenshtein import *
 
 
 
@@ -28,6 +29,18 @@ def makeMatrix(s):
     return distance
 
 # @functools.lru_cache(maxsize=None)
+def levenshtein_ratio_and_distance(s, t, distance):
+    """ levenshtein_ratio_and_distance:
+        Calculates levenshtein distance between two strings.
+        If ratio_calc = True, the function computes the
+        levenshtein distance ratio of similarity between two strings
+        For all i and j, distance[i,j] will contain the Levenshtein
+        distance between the first i characters of s and the
+        first j characters of t
+    """
+    x = Levenshtein.distance(s, t)
+    print(x)
+    return x
 def levenshtein_ratio_and_distance(s, t, distance):
     """ levenshtein_ratio_and_distance:
         Calculates levenshtein distance between two strings.
