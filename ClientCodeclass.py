@@ -10,6 +10,7 @@ class clientclass:
         self.FORMAT = 'utf-8'
         self.DISCONNECT_MESSAGE = "!DISCONNECT"
         SERVER = "192.168.0.241"
+        # SERVER = "192.168.0.104"
         ADDR = (SERVER, PORT)
 
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -25,9 +26,11 @@ class clientclass:
         print(answer)
         if answer != "no":
             z = json.loads(answer)
-            with open(f'{z["row"]}{z["col"]}.json', 'w') as fp:
-                json.dump(z, fp)
-            fp.close()
+            return z
+        return None
+            # with open(f'{z["row"]}{z["col"]}.json', 'w') as fp:
+            #     json.dump(z, fp)
+            # fp.close()
 
     def update(self, result, i, final):
         if result > self.best_result:

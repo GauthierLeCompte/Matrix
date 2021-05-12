@@ -31,7 +31,7 @@ def levenshtein_ratio_and_distance(s, t):
 
 
 
-def genomediff(x, y, client1, name):
+def genomediff(x, y, client1, name, request):
     """
     calculate the diffrent combinations of the 2 genomes
     :param x: genome 1
@@ -54,16 +54,14 @@ def genomediff(x, y, client1, name):
         count = leny - lenx
         smallest = lenx
 
-    try:
-        fi = open(f"{name}.json")
-        dataname = json.load(fi)
-        fi.close()
+    if request != None:
+        dataname = request
         if dataname["final"] == True:
             return dataname["result"]
         start = dataname["i"]
         final = dataname["result"]
 
-    except (FileNotFoundError, IOError):
+    else:
         if longest > 14000 and smallest <10000:
             start = 14100 - (smallest*2)
             count = min(count, 14200+smallest*2)
@@ -105,11 +103,11 @@ def algorithm(species, i, return_dict):
     toapend = [] # Lijst van resultaten van alle kolommen in volgorde
     for j in range(i, len(species)): # Loop over alle kolommen
         client1 = ClientCodeclass.clientclass(species[i][0], species[j][0]) # Client initializeren
-        client1.ask() #
+        request = client1.ask() #
         if species[i][0] == species[j][0]:
             toapend.append(1.0)
         else:
-            answer = genomediff(species[i][1], species[j][1], client1, f"{species[i][0]}{species[j][0]}")
+            answer = genomediff(species[i][1], species[j][1], client1, f"{species[i][0]}{species[j][0]}", request)
             toapend.append(answer)
         client1.closee()
         newts = datetime.datetime.now()
