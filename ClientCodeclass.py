@@ -9,7 +9,8 @@ class clientclass:
         PORT = 5050
         self.FORMAT = 'utf-8'
         self.DISCONNECT_MESSAGE = "!DISCONNECT"
-        SERVER = "192.168.0.240"
+        SERVER = "192.168.0.241"
+        # SERVER = "192.168.0.104"
         ADDR = (SERVER, PORT)
 
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -17,20 +18,23 @@ class clientclass:
 
         self.row_name = row_name
         self.col_name = col_name
-        self.r = 0
+        self.best_result = 0
 
-    def ask(self, x, y):
-        msg = f"1{x}{y}"
+    def ask(self):
+        msg = f"1{self.row_name}{self.col_name}"
         answer = self.send(msg)
+        print(answer)
         if answer != "no":
             z = json.loads(answer)
-            with open(f'{z["row"]}{z["col"]}.json', 'w') as fp:
-                json.dump(z, fp)
-            fp.close()
+            return z
+        return None
+            # with open(f'{z["row"]}{z["col"]}.json', 'w') as fp:
+            #     json.dump(z, fp)
+            # fp.close()
 
     def update(self, result, i, final):
-        if result > self.r:
-            self.r = result
+        if result > self.best_result:
+            self.best_result = result
         progress = {"row": self.row_name, "col":self.col_name, "result":result, "i":i, "final": final}
         msg = json.dumps(progress)
         # msg = f"row {self.row_name} is evaluating {self.col_name} as result {result}"
@@ -44,7 +48,7 @@ class clientclass:
         self.client.send(send_length)
         self.client.send(message)
         x = self.client.recv(2048).decode(self.FORMAT)
-        print(x)
+        # print(x)
         return x
 
     def closee(self):

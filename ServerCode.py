@@ -4,7 +4,8 @@ import json
 
 HEADER = 64
 PORT = 5050
-SERVER = "192.168.0.240"
+SERVER = "192.168.0.241"
+# SERVER = "192.168.0.104"
 ADDR = (SERVER, PORT)
 FORMAT = 'utf-8'
 DISCONNECT_MESSAGE = "!DISCONNECT"
@@ -27,9 +28,9 @@ def handle_client(conn, addr):
 
             print(f"[{addr}] {msg}")
             try:
-                z = json.loads(msg)
-                with open(f'{z["row"]}{z["col"]}.json', 'w') as fp:
-                    json.dump(z, fp)
+                resultdict = json.loads(msg)
+                with open(f'{resultdict["row"]}{resultdict["col"]}.json', 'w') as fp:
+                    json.dump(resultdict, fp)
                 fp.close()
                 conn.send("Msg received".encode(FORMAT))
 
