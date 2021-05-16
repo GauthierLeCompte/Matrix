@@ -1,4 +1,4 @@
-# Matrix
+# correlatie heatmap
 placementCytB.py output  waar cytochroom b zit in de volledige sequenties
 main.py maakt de matrix aan van de rechtsbovendriehoek voor een corelatie matrix
 ServerCode.py runt de server
