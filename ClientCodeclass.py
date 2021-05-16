@@ -2,8 +2,9 @@ import socket
 import json
 
 
-
+#TODO: Uitleg class
 class clientclass:
+    # TODO: Uitleg functie
     def __init__(self, row_name, col_name):
         self.HEADER = 64
         PORT = 5050
@@ -20,6 +21,7 @@ class clientclass:
         self.col_name = col_name
         self.best_result = 0
 
+    #TODO: Uitleg functie
     def ask(self):
         msg = f"1{self.row_name}{self.col_name}"
         answer = self.send(msg)
@@ -32,6 +34,7 @@ class clientclass:
             #     json.dump(z, fp)
             # fp.close()
 
+    # TODO: Uitleg functie
     def update(self, result, i, final):
         if result > self.best_result:
             self.best_result = result
@@ -40,6 +43,7 @@ class clientclass:
         # msg = f"row {self.row_name} is evaluating {self.col_name} as result {result}"
         self.send(msg)
 
+    # TODO: Uitleg functie
     def send(self, msg):
         message = msg.encode(self.FORMAT)
         msg_length = len(message)
@@ -51,6 +55,7 @@ class clientclass:
         # print(x)
         return x
 
+    # TODO: Uitleg functie
     def closee(self):
         self.send(self.DISCONNECT_MESSAGE)
         self.client.close()

@@ -49,16 +49,20 @@ def levenshtein_ratio_and_distance(s, t, ratio_calc = False):
         # This is the minimum number of edits needed to convert string a to string b
         return distance[row][col]
 
+#TODO: Uitleg functie
 def genomedif(x, y):
+    # TODO: Uitleg
     lenx = len(x)
     leny = len(y)
     swapped = False
 
+    # TODO: Uitleg
     count = lenx-leny
     if lenx<leny:
         swapped = True
         count = leny-lenx
 
+    # TODO: Uitleg
     besti = 0
     final = 0
     for i in range(count+1):
@@ -68,28 +72,34 @@ def genomedif(x, y):
             usedx = x
             usedy = y[i:leny + i]
 
+        # TODO: Uitleg
         result2 = levenshtein_ratio_and_distance(usedx, usedy, True)
         if result2 > final:
             besti = i
             final = result2
-    print("BESTE I: ", besti)
+    #print("BESTE I: ", besti)
     return final
 
+
 def getGenome(name):
+    '''
+    Returns the sequence for the specified name
+    :param name: the specified name
+    :return: genome sequence
+    '''
     for i in range(len(species)):
         if species[i][0] == name:
             return species[i][1]
     return None
 
+#TODO: Uitleg
 f = open('sequenties.json', )
-
 data = json.load(f)
 species = []
 for i in data['species']:
     specie = [i["name"], i["genome"]]
     species.append(specie)
 f.close()
-
 
 x=1
 answerdict = {}
@@ -103,7 +113,6 @@ comparison_dict = {"Ailurus_fulgens": "Canis_rufus",
                    "Canis_lupus_lupus": "Lycalopex_griseus"}
 
 for key, value in comparison_dict.items():
-    print ("Comparing ", key, " with ", value)
     answer = genomedif(getGenome(key), getGenome(value))
     if key in answerdict:
         answerdict[key].append(answer)
@@ -113,8 +122,6 @@ for key, value in comparison_dict.items():
     newts = datetime.datetime.now()
     compts = newts - oldts
 
-    #print(i + 1, " from ", len(species), " and done with comparing ", j + 1, " from ", len(species) - i, " in ",
-          #compts.seconds, " seconds,  the time is", newts.time())
     oldts = datetime.datetime.now()
 
 '''for i in range(1,len(species)):
