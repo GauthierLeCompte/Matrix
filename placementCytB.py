@@ -2,7 +2,7 @@ import numpy as np
 import json
 import datetime
 
-
+# volgende functie komt van https://www.datacamp.com/community/tutorials/fuzzy-string-python
 def levenshtein_ratio_and_distance(s, t, ratio_calc = False):
     """ levenshtein_ratio_and_distance:
         Calculates levenshtein distance between two strings.
@@ -51,18 +51,15 @@ def levenshtein_ratio_and_distance(s, t, ratio_calc = False):
 
 #TODO: Uitleg functie
 def genomedif(x, y):
-    # TODO: Uitleg
     lenx = len(x)
     leny = len(y)
     swapped = False
 
-    # TODO: Uitleg
     count = lenx-leny
     if lenx<leny:
         swapped = True
         count = leny-lenx
 
-    # TODO: Uitleg
     besti = 0
     final = 0
     for i in range(count+1):
@@ -72,12 +69,11 @@ def genomedif(x, y):
             usedx = x
             usedy = y[i:leny + i]
 
-        # TODO: Uitleg
         result2 = levenshtein_ratio_and_distance(usedx, usedy, True)
         if result2 > final:
             besti = i
             final = result2
-    #print("BESTE I: ", besti)
+    print("BESTE I: ", besti)
     return final
 
 
@@ -92,7 +88,6 @@ def getGenome(name):
             return species[i][1]
     return None
 
-#TODO: Uitleg
 f = open('sequenties.json', )
 data = json.load(f)
 species = []
@@ -101,7 +96,6 @@ for i in data['species']:
     species.append(specie)
 f.close()
 
-x=1
 answerdict = {}
 oldts = datetime.datetime.now()
 
@@ -123,22 +117,3 @@ for key, value in comparison_dict.items():
     compts = newts - oldts
 
     oldts = datetime.datetime.now()
-
-'''for i in range(1,len(species)):
-    for j in range(i, len(species)):
-        answer = genomedif(species[i][1], species[j][1])
-        if species[i][0] in answerdict:
-            answerdict[species[i][0]].append(answer)
-        else:
-            answerdict[species[i][0]] = [answer]
-
-        newts = datetime.datetime.now()
-        compts = newts-oldts
-
-        print(species[i][0])
-        print(i+1, " from ", len(species), " and done with comparing ", j+1, " from ", len(species)-i, " in ", compts.seconds, " seconds,  the time is", newts.time())
-        oldts = datetime.datetime.now()'''
-
-
-
-

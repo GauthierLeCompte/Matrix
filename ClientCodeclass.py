@@ -4,14 +4,21 @@ import json
 
 #TODO: Uitleg class
 class clientclass:
+    """
+    classe voor de clientside
+    """
     # TODO: Uitleg functie
     def __init__(self, row_name, col_name):
+        """
+        initializeerd de classe met de rij en kollom naam
+        """
         self.HEADER = 64
+        #moet dezelfde port zijn als de server
         PORT = 5050
         self.FORMAT = 'utf-8'
         self.DISCONNECT_MESSAGE = "!DISCONNECT"
+        #change to own IP4v address
         SERVER = "192.168.0.241"
-        # SERVER = "192.168.0.104"
         ADDR = (SERVER, PORT)
 
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -19,10 +26,11 @@ class clientclass:
 
         self.row_name = row_name
         self.col_name = col_name
-        self.best_result = 0
 
-    #TODO: Uitleg functie
     def ask(self):
+        """
+        vraag de server voor een json, alse deze bestaat return deze en anders return je None
+        """
         msg = f"1{self.row_name}{self.col_name}"
         answer = self.send(msg)
         print(answer)
@@ -30,21 +38,24 @@ class clientclass:
             z = json.loads(answer)
             return z
         return None
-            # with open(f'{z["row"]}{z["col"]}.json', 'w') as fp:
-            #     json.dump(z, fp)
-            # fp.close()
 
-    # TODO: Uitleg functie
     def update(self, result, i, final):
-        if result > self.best_result:
-            self.best_result = result
+        """
+        schrijf progress en results uit naar de server
+        :param result: het beste resultaat tot nu toe (float)
+        :param i: de hoeveelste itteratie is gebeurd (int)
+        :param final: is dit het finale resultaat (bool)
+        """
         progress = {"row": self.row_name, "col":self.col_name, "result":result, "i":i, "final": final}
         msg = json.dumps(progress)
-        # msg = f"row {self.row_name} is evaluating {self.col_name} as result {result}"
         self.send(msg)
 
-    # TODO: Uitleg functie
     def send(self, msg):
+        """
+        stuur een msg naar de server 
+        eerst wordt dit ge-encode en dan verstuurd
+        return wat de server antwoord
+        """
         message = msg.encode(self.FORMAT)
         msg_length = len(message)
         send_length = str(msg_length).encode(self.FORMAT)
@@ -52,11 +63,12 @@ class clientclass:
         self.client.send(send_length)
         self.client.send(message)
         x = self.client.recv(2048).decode(self.FORMAT)
-        # print(x)
         return x
 
-    # TODO: Uitleg functie
     def closee(self):
+        """
+        sluit de client
+        """
         self.send(self.DISCONNECT_MESSAGE)
         self.client.close()
 

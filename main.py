@@ -14,28 +14,20 @@ import Levenshtein
 # @functools.lru_cache(maxsize=None)
 def levenshtein_ratio_and_distance(s, t):
     """ levenshtein_ratio_and_distance:
-        Calculates levenshtein distance between two strings.
-        If ratio_calc = True, the function computes the
-        levenshtein distance ratio of similarity between two strings
-        For all i and j, distance[i,j] will contain the Levenshtein
-        distance between the first i characters of s and the
-        first j characters of t
+        Calculates the levenshtein distance ratio of similarity between two strings
     """
-    # print(f"number1 start{datetime.datetime.now().time()}")
     x = Levenshtein.ratio(s, t)
-    # print(x)
-
-    # print(f"number1 stop {datetime.datetime.now().time()}")
     return x
 
 
-
-
-def genomediff(x, y, client1, name, request):
+def genomediff(x, y, client1, request):
     """
-    calculate the diffrent combinations of the 2 genomes
+    loop over het grootste genoom en zoek het levenshtein ratio tussen dat 
+    deel van het grootste genoom en het kleinste genoom
     :param x: genome 1
     :param y: genome 2
+    :param client1: client that handled this
+    :param request: None of the json met progress
     :return: best combination
     """
     lenx = len(x)
@@ -47,20 +39,20 @@ def genomediff(x, y, client1, name, request):
     longest = lenx
     start = 0
     final = 0
-
+    # zie welk genoom het langste is
     if lenx < leny:
         longest = leny
         swapped = True
         count = leny - lenx
         smallest = lenx
-
+    # als er al progress hervat dan van hier
     if request != None:
         dataname = request
         if dataname["final"] == True:
             return dataname["result"]
         start = dataname["i"]
         final = dataname["result"]
-
+    # als 1 genome volledig is en de andere partial zoek dan rond plaats 14000 
     else:
         if longest > 14000 and smallest <10000:
             start = 14100 - (smallest*2)
@@ -68,6 +60,7 @@ def genomediff(x, y, client1, name, request):
 
     step = 100
     steptotal = 0
+    #loop over het grootste genoom
     for i in range(start, count + 1):
         step += 1
         steptotal +=1
@@ -76,17 +69,17 @@ def genomediff(x, y, client1, name, request):
         if swapped:
             usedx = x
             usedy = y[i:lenx + i]
-        result2 = levenshtein_ratio_and_distance(usedx, usedy)
-        # result3 = levenshtein_ratio_and_distance2(usedx, usedy, distance.copy())
-        # print(f"{result2} vs {result3} = {result2-result3}")
-
-        if result2 > final:
-            final = result2
+        result = levenshtein_ratio_and_distance(usedx, usedy)
+        #als er een nieuw beste resultaat is update en update de server
+        if result > final:
+            final = result
             client1.update(final, i, False)
             step = 0
+            # schrijf progress om de honderd stappen weg naar de server
         if step>=100:
             client1.update(final, i, False)
             step = 0
+    #stuur het finale resultaat door naar de server
     client1.update(final, count, True)
     print(f"this were the steps {steptotal}")
     return final
@@ -94,7 +87,7 @@ def genomediff(x, y, client1, name, request):
 
 def algorithm(species, i, return_dict):
     """
-    go over every collumb of the row i
+    go over every collum of the row i
     :param species: [[name, genome]]
     :param i: row
     :param return_dict: dictionory
@@ -107,7 +100,7 @@ def algorithm(species, i, return_dict):
         if species[i][0] == species[j][0]:
             toapend.append(1.0)
         else:
-            answer = genomediff(species[i][1], species[j][1], client1, f"{species[i][0]}{species[j][0]}", request)
+            answer = genomediff(species[i][1], species[j][1], client1, request)
             toapend.append(answer)
         client1.closee()
         newts = datetime.datetime.now()
@@ -120,6 +113,7 @@ def algorithm(species, i, return_dict):
 
 
 if __name__ == "__main__":
+    #lees sequenties in
     f = open('sequenties.json')
     data = json.load(f)
     species = []
@@ -127,21 +121,21 @@ if __name__ == "__main__":
         specie = [i["name"], i["genome"]]
         species.append(specie)
     f.close()
-
+    
     oldts = datetime.datetime.now()
     processes = []
     return_dict = multiprocessing.Manager().dict()
-    ronny = [0, 2, 4, 6, 8, 10, 12, 14, 16, 17, 18, 19, 23, 24, 25, 26, 27, 28]
-    for i in ronny:
+    #per rij start een nieuw proces
+    for i in range(0,29):
         print("start procces %i" % (i+1))
         p = multiprocessing.Process(target=algorithm, args=(species, i, return_dict))
         processes.append(p)
         p.start()
-
+    #join de processen 
     for process in processes:
         process.join()
-
-    with open('result_test.json', 'w') as fp:
+    #schrijf resultaat uit naar een json
+    with open('final_matrix.json', 'w') as fp:
         json.dump(return_dict.copy(), fp)
     fp.close()
 
