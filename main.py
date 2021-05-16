@@ -126,6 +126,7 @@ if __name__ == "__main__":
     processes = []
     return_dict = multiprocessing.Manager().dict()
     #per rij start een nieuw proces
+    #pas range aan indien je maar een deel wilt doen(voor meerdere pcs te gebruiken
     for i in range(0,29):
         print("start procces %i" % (i+1))
         p = multiprocessing.Process(target=algorithm, args=(species, i, return_dict))
